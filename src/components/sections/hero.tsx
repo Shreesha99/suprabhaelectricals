@@ -58,7 +58,7 @@ export function Hero() {
   }, { scope: container });
 
   return (
-    <section ref={container} id="home" className="relative w-full h-[90vh] min-h-[700px] lg:h-screen flex flex-col justify-center text-white overflow-hidden">
+    <section ref={container} id="home" className="relative w-full h-screen min-h-[700px] flex flex-col justify-center text-white overflow-hidden">
       {heroImage && (
          <Image
             src={heroImage.imageUrl}
