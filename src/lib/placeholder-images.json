@@ -1,3 +1,40 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero-background",
+      "description": "A wide shot of an impressive architectural structure with modern lighting, signifying large-scale electrical projects.",
+      "imageUrl": "https://images.unsplash.com/photo-1659534198700-b52e206d8516?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxlbGVjdHJpY2FsJTIwaW5mcmFzdHJ1Y3R1cmV8ZW58MHx8fHwxNzY4NDEzOTM3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "electrical infrastructure"
+    },
+    {
+      "id": "about-image",
+      "description": "A team of electricians working together on a complex wiring project.",
+      "imageUrl": "https://images.unsplash.com/photo-1713937400833-f817938b51e4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxlbGVjdHJpY2lhbiUyMHRlYW18ZW58MHx8fHwxNzY4NDEzOTM3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "electrician team"
+    },
+    {
+      "id": "project-geological-survey",
+      "description": "Exterior of the Geological Survey of India building in Bangalore.",
+      "imageUrl": "https://images.unsplash.com/photo-1523292562811-8fa7962a78c8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxnb3Zlcm5tZW50JTIwYnVpbGRpbmd8ZW58MHx8fHwxNzY4MzI4MDg5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "government building"
+    },
+    {
+      "id": "project-cii-bangalore",
+      "description": "Modern facade of the CII Bangalore office.",
+      "imageUrl": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxvZmZpY2UlMjBidWlsZGluZ3xlbnwwfHx8fDE3NjgzNDc2NzZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "office building"
+    },
+    {
+      "id": "project-nit-surathkal",
+      "description": "A new wing of the NIT Surathkal campus.",
+      "imageUrl": "https://images.unsplash.com/photo-1590579491624-f98f36d4c763?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHx1bml2ZXJzaXR5JTIwY2FtcHVzfGVufDB8fHx8MTc2ODMzNjk0M3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "university campus"
+    },
+    {
+      "id": "project-auditorium",
+      "description": "Interior of a large auditorium with complex stage lighting.",
+      "imageUrl": "https://images.unsplash.com/photo-1579480537892-40fce7bc35a0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxhdWRpdG9yaXVtJTIwbGlnaHRpbmd8ZW58MHx8fHwxNzY4NDEzOTM3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "auditorium lighting"
+    }
+  ]
 }
