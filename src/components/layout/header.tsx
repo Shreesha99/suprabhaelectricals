@@ -46,7 +46,10 @@ export function Header() {
     <>
       {/* Centered Logo for all screen sizes */}
       <header className="fixed top-0 z-50 w-full flex justify-center pt-4 transition-all duration-300">
-        <Link href="#home" className="flex items-center gap-2">
+        <Link href="#home" className={cn(
+          "relative flex items-center gap-2 transition-transform duration-300 ease-in-out",
+          isScrolled && "transform -translate-x-[calc(50%-20px)] md:-translate-x-0"
+        )}>
           <div className={cn(
             "transition-all duration-300 ease-in-out flex items-center justify-center",
             isScrolled ? "bg-white rounded-full h-10 w-10" : "h-12 w-12"
@@ -54,8 +57,8 @@ export function Header() {
             <Zap className={cn("transition-colors duration-300", isScrolled ? "h-6 w-6 text-primary" : "h-8 w-8 text-white")} />
           </div>
           <h1 className={cn(
-            "text-lg font-bold font-headline transition-all duration-300 ease-in-out",
-            isScrolled ? "opacity-0 -translate-x-4" : "opacity-100 translate-x-0 text-white"
+            "text-lg font-bold font-headline transition-all duration-300 ease-in-out text-white",
+            isScrolled ? "opacity-0 -translate-x-4" : "opacity-100 translate-x-0"
           )}>
             Suprabha Electricals
           </h1>
