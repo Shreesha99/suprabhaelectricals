@@ -15,10 +15,9 @@ import {
 
 const navLinks = [
   { href: '#home', label: 'Home' },
-  { href: '#about', label: 'About' },
   { href: '#services', label: 'Services' },
+  { href: '#about', label: 'About' },
   { href: '#projects', label: 'Projects' },
-  { href: '#contact', label: 'Contact Us' },
 ];
 
 export function Header() {
@@ -28,27 +27,37 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center">
+      <div className="container flex h-20 items-center">
         <Link href="#home" className="flex items-center gap-2 mr-auto">
           <Zap className="h-6 w-6 text-primary" />
-          <h1 className="text-lg font-bold font-headline text-primary">
+          <h1 className="text-lg font-bold font-headline text-foreground">
             Suprabha Electricals
           </h1>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-6">
+        <nav className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm font-medium transition-colors text-foreground/60 hover:text-foreground"
+              className="text-sm font-medium transition-colors text-muted-foreground hover:text-foreground"
             >
               {link.label}
             </Link>
           ))}
         </nav>
+        
+        <div className="hidden md:flex items-center gap-4 ml-8">
+            <Link href="#contact" className="text-sm font-medium text-muted-foreground hover:text-foreground">
+                Contact Us
+            </Link>
+            <Button asChild className="rounded-full text-primary-foreground font-bold">
+                <Link href="#contact">Get a Quote</Link>
+            </Button>
+        </div>
 
-        <div className="md:hidden">
+
+        <div className="md:hidden ml-4">
           <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
@@ -61,12 +70,12 @@ export function Header() {
                 <SheetTitle>
                   <Link href="#home" onClick={closeSheet} className="flex items-center gap-2">
                      <Zap className="h-6 w-6 text-primary" />
-                     <span className="font-headline text-primary">Suprabha Electricals</span>
+                     <span className="font-headline text-foreground">Suprabha Electricals</span>
                   </Link>
                 </SheetTitle>
               </SheetHeader>
               <div className="flex flex-col gap-4 mt-8">
-                {navLinks.map((link) => (
+                {[...navLinks, {href: '#contact', label: 'Contact Us'}].map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
@@ -76,6 +85,9 @@ export function Header() {
                     {link.label}
                   </Link>
                 ))}
+                 <Button asChild className="mt-4 text-primary-foreground">
+                    <Link href="#contact" onClick={closeSheet}>Get a Quote</Link>
+                </Button>
               </div>
             </SheetContent>
           </Sheet>

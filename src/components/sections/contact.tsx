@@ -1,7 +1,7 @@
 "use client";
 
 import { Clock, Mail, Phone, MapPin, AlertTriangle } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -10,7 +10,6 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import { useRef } from 'react';
-
 
 const contactDetails = [
   {
@@ -41,62 +40,67 @@ export function Contact() {
       scrollTrigger: {
         trigger: container.current,
         start: 'top 80%',
+        toggleActions: 'play none none none',
       },
     });
 
     tl.fromTo('.section-header-contact', { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' })
-      .fromTo('.contact-detail-item', { x: -50, opacity: 0 }, { x: 0, opacity: 1, stagger: 0.2, duration: 0.6, ease: 'power2.out' }, "-=0.5")
-      .fromTo('.contact-card', { x: 50, opacity: 0 }, { x: 0, opacity: 1, duration: 1, ease: 'power3.out' }, "-=0.8");
+      .fromTo('.contact-detail-item', { x: -30, opacity: 0 }, { x: 0, opacity: 1, stagger: 0.2, duration: 0.6, ease: 'power2.out' }, "-=0.5")
+      .fromTo('.contact-card', { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: 'power3.out' }, "-=0.8");
 
   }, { scope: container });
 
   return (
-    <section id="contact" ref={container} className="py-16 lg:py-24 bg-background overflow-hidden">
+    <section id="contact" ref={container} className="py-24 lg:py-32 bg-secondary overflow-hidden">
       <div className="container">
         <div className="text-center space-y-4 mb-12 section-header-contact">
-          <h2 className="text-3xl md:text-4xl font-headline font-bold text-primary">
+          <span className="text-primary font-semibold">Contact Us</span>
+          <h2 className="text-3xl md:text-4xl font-headline font-bold text-foreground">
             Get in Touch
           </h2>
-          <p className="max-w-2xl mx-auto text-lg text-foreground/80">
-            Have a project in mind? We'd love to hear from you.
+          <p className="max-w-2xl mx-auto text-lg text-muted-foreground">
+            Have a project in mind? We'd love to hear from you. Fill out the form or use our contact details to reach out.
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12">
-          <div className="space-y-8 flex flex-col">
+        <div className="grid lg:grid-cols-2 gap-12 items-start">
+          <div className="space-y-8 flex flex-col h-full">
             {contactDetails.map((item, index) => (
               <div key={index} className="flex items-center gap-4 contact-detail-item">
-                <div className="bg-primary/10 p-3 rounded-full">
+                <div className="bg-primary/10 p-3 rounded-lg">
                   {item.icon}
                 </div>
-                {item.href ? (
-                  <a href={item.href} className="text-lg text-foreground/80 hover:text-primary transition-colors">{item.text}</a>
-                ) : (
-                  <p className="text-lg text-foreground/80">{item.text}</p>
-                )}
+                <div>
+                    {item.href ? (
+                      <a href={item.href} className="text-lg text-foreground hover:text-primary transition-colors">{item.text}</a>
+                    ) : (
+                      <p className="text-lg text-foreground">{item.text}</p>
+                    )}
+                </div>
               </div>
             ))}
             <div className="mt-auto pt-8 contact-detail-item">
-              <Alert variant="destructive" className="bg-accent/20 border-accent text-accent-foreground">
-                <AlertTriangle className="h-4 w-4 text-accent" />
-                <AlertTitle className="text-accent font-bold">Please Note</AlertTitle>
-                <AlertDescription className="text-accent-foreground/80">
+              <Alert variant="destructive" className="bg-destructive/10 border-destructive/20 text-destructive-foreground">
+                <AlertTriangle className="h-4 w-4 text-destructive" />
+                <AlertTitle className="text-destructive font-bold">Please Note</AlertTitle>
+                <AlertDescription className="text-destructive-foreground/80">
                   We do not provide emergency support. Our working hours are strictly for project-based inquiries.
                 </AlertDescription>
               </Alert>
             </div>
           </div>
           
-          <Card className="shadow-lg contact-card">
+          <Card className="shadow-lg contact-card bg-card border-border">
             <CardHeader>
               <CardTitle className="font-headline text-2xl">Send us a Message</CardTitle>
+              <CardDescription>We'll get back to you as soon as possible.</CardDescription>
             </CardHeader>
             <CardContent>
               <form className="space-y-4">
-                <Input placeholder="Your Name" />
-                <Input type="email" placeholder="Your Email" />
-                <Textarea placeholder="Your Message" rows={5} />
-                <Button type="submit" size="lg" className="w-full">Send Message</Button>
+                <Input placeholder="Your Name" className="bg-input" />
+                <Input type="email" placeholder="Your Email" className="bg-input" />
+                <Textarea placeholder="Your Message" rows={5} className="bg-input" />
+                <Button type="submit" size="lg" className="w-full text-primary-foreground font-bold">Send Message</Button>
               </form>
             </CardContent>
           </Card>

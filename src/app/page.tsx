@@ -8,6 +8,7 @@ import { Testimonials } from '@/components/sections/testimonials';
 import { Contact } from '@/components/sections/contact';
 import ChatBot from '@/components/chat-bot';
 import { WhyChooseUs } from '@/components/sections/why-choose-us';
+import {Separator} from "@/components/ui/separator";
 
 export default function Home() {
   return (
@@ -15,11 +16,14 @@ export default function Home() {
       <Header />
       <main className="flex-1">
         <Hero />
-        <About />
         <Services />
+        <About />
         <WhyChooseUs />
         <Projects />
         <Testimonials />
+        <div className="container py-12">
+            <Separator />
+        </div>
         <Contact />
       </main>
       <Footer />

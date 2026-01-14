@@ -36,34 +36,43 @@ export function Projects() {
   });
 
   useGSAP(() => {
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: container.current,
-        start: 'top 80%',
-      },
+    gsap.fromTo('.section-header-projects', { y: 50, opacity: 0 }, {
+        y: 0, opacity: 1, duration: 0.8, ease: 'power3.out',
+        scrollTrigger: {
+            trigger: '.section-header-projects',
+            start: 'top 85%',
+        }
     });
 
-    tl.fromTo('.section-header-projects', { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' });
-    tl.fromTo('.project-card', { y: 50, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.15, duration: 0.6, ease: 'power2.out' }, "-=0.5");
+    gsap.utils.toArray<gsap.DOMTarget>('.project-card').forEach((card, i) => {
+        gsap.fromTo(card, { y: 50, opacity: 0 }, {
+            y: 0, opacity: 1, duration: 0.6, ease: 'power2.out',
+            scrollTrigger: {
+                trigger: card,
+                start: 'top 90%',
+            }
+        });
+    });
 
   }, { scope: container });
 
   return (
-    <section id="projects" ref={container} className="py-16 lg:py-24 bg-secondary overflow-hidden">
-      <div className="container space-y-12">
+    <section id="projects" ref={container} className="py-24 lg:py-32 bg-background overflow-hidden">
+      <div className="container space-y-16">
         <div className="text-center space-y-4 section-header-projects">
-          <h2 className="text-3xl md:text-4xl font-headline font-bold text-primary">
-            Our Projects
+          <span className="text-primary font-semibold">Our Work</span>
+          <h2 className="text-3xl md:text-4xl font-headline font-bold text-foreground">
+            Our Seamless Electrical Process
           </h2>
-          <p className="max-w-2xl mx-auto text-lg text-foreground/80">
+          <p className="max-w-2xl mx-auto text-lg text-muted-foreground">
             A showcase of our successfully completed government electrical projects.
           </p>
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {projects.map((project, index) => (
             project.imageUrl && (
-              <Card key={index} className="overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 group project-card border-0 rounded-lg">
-                <div className="relative h-48 w-full">
+              <Card key={index} className="overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 group project-card border-border bg-card rounded-lg">
+                <div className="relative h-64 w-full">
                   <Image
                     src={project.imageUrl}
                     alt={project.description || project.title}
@@ -72,11 +81,12 @@ export function Projects() {
                     className="object-cover transition-transform duration-300 group-hover:scale-105"
                     data-ai-hint={project.imageHint}
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  <div className="absolute bottom-0 left-0 p-4">
+                      <p className="text-sm text-white/80">{project.location}</p>
+                      <h3 className="font-bold text-white text-lg">{project.title}</h3>
+                  </div>
                 </div>
-                <CardHeader>
-                  <CardTitle className="font-headline text-xl">{project.title}</CardTitle>
-                  <CardDescription>{project.location}</CardDescription>
-                </CardHeader>
               </Card>
             )
           ))}

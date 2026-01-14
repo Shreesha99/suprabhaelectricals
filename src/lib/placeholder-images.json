@@ -2,39 +2,39 @@
   "placeholderImages": [
     {
       "id": "hero-background",
-      "description": "A wide shot of an impressive architectural structure with modern lighting, signifying large-scale electrical projects.",
-      "imageUrl": "https://images.unsplash.com/photo-1659534198700-b52e206d8516?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxlbGVjdHJpY2FsJTIwaW5mcmFzdHJ1Y3R1cmV8ZW58MHx8fHwxNzY4NDEzOTM3fDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "electrical infrastructure"
+      "description": "A landscape with solar panels and wind turbines under a dramatic sky, signifying renewable energy.",
+      "imageUrl": "https://images.unsplash.com/photo-1508514177221-188b1cf16e9c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxzb2xhciUyMHBhbmVscyUyMGFuZCUyMHdpbmQlMjB0dXJiaW5lc3xlbnwwfHx8fDE3NjkyMzkzODJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "solar wind"
     },
     {
       "id": "about-image",
-      "description": "A team of electricians working together on a complex wiring project.",
-      "imageUrl": "https://images.unsplash.com/photo-1713937400833-f817938b51e4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxlbGVjdHJpY2lhbiUyMHRlYW18ZW58MHx8fHwxNzY4NDEzOTM3fDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "electrician team"
+      "description": "A team of engineers and electricians discussing plans on a construction site for a renewable energy project.",
+      "imageUrl": "https://images.unsplash.com/photo-1624391673215-3b5e836b3b5c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxlbmdpbmVlcnMlMjBzb2xhcnxlbnwwfHx8fDE3NjkyMzk0NDB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "engineers solar"
     },
     {
       "id": "project-geological-survey",
-      "description": "Exterior of the Geological Survey of India building in Bangalore.",
-      "imageUrl": "https://images.unsplash.com/photo-1523292562811-8fa7962a78c8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxnb3Zlcm5tZW50JTIwYnVpbGRpbmd8ZW58MHx8fHwxNzY4MzI4MDg5fDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "government building"
+      "description": "A modern government building with energy-efficient features.",
+      "imageUrl": "https://images.unsplash.com/photo-1582993738520-41e7fb62751f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBnb3Zlcm5tZW50JTIwYnVpbGRpbmd8ZW58MHx8fHwxNzY5MjM5NDcxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "modern government building"
     },
     {
       "id": "project-cii-bangalore",
-      "description": "Modern facade of the CII Bangalore office.",
-      "imageUrl": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxvZmZpY2UlMjBidWlsZGluZ3xlbnwwfHx8fDE3NjgzNDc2NzZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "office building"
+      "description": "Corporate office building with a focus on sustainable architecture.",
+      "imageUrl": "https://images.unsplash.com/photo-1620912189836-1679a105f638?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzdXN0YWluYWJsZSUyMG9mZmljZXxlbnwwfHx8fDE3NjkyMzk1MDF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "sustainable office"
     },
     {
       "id": "project-nit-surathkal",
-      "description": "A new wing of the NIT Surathkal campus.",
-      "imageUrl": "https://images.unsplash.com/photo-1590579491624-f98f36d4c763?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHx1bml2ZXJzaXR5JTIwY2FtcHVzfGVufDB8fHx8MTc2ODMzNjk0M3ww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "university campus"
+      "description": "University building with solar panels on the roof.",
+      "imageUrl": "https://images.unsplash.com/photo-1605799902642-758b7a6505a7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxzb2xhciUyMHBhbmVscyUyMG9uJTIwY2FtcHVzfGVufDB8fHx8MTc2OTIzOTUzMnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "solar campus"
     },
     {
       "id": "project-auditorium",
-      "description": "Interior of a large auditorium with complex stage lighting.",
-      "imageUrl": "https://images.unsplash.com/photo-1579480537892-40fce7bc35a0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxhdWRpdG9yaXVtJTIwbGlnaHRpbmd8ZW58MHx8fHwxNzY4NDEzOTM3fDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "auditorium lighting"
+      "description": "Modern auditorium with energy-efficient LED lighting system.",
+      "imageUrl": "https://images.unsplash.com/photo-1543699539-a6027c95b766?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxtb2Rlcm4lMjBhdWRpdG9yaXVtfGVufDB8fHx8MTc2OTIzOTU2M3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "modern auditorium"
     }
   ]
 }

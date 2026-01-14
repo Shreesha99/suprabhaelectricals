@@ -66,7 +66,7 @@ export default function ChatBot() {
   return (
     <>
       <div className={cn("fixed bottom-4 right-4 z-[60] transition-transform duration-300 ease-in-out", isOpen ? "translate-x-[calc(100%+2rem)]" : "translate-x-0")}>
-        <Button size="icon" className="rounded-full h-16 w-16 shadow-lg bg-primary hover:bg-primary/90" onClick={() => setIsOpen(true)}>
+        <Button size="icon" className="rounded-full h-16 w-16 shadow-lg bg-primary hover:bg-primary/90 text-primary-foreground" onClick={() => setIsOpen(true)}>
           <Bot className="h-8 w-8" />
           <span className="sr-only">Open Chatbot</span>
         </Button>
@@ -76,7 +76,7 @@ export default function ChatBot() {
           "fixed bottom-4 right-4 z-[60] w-[calc(100%-2rem)] max-w-sm transition-transform duration-300 ease-in-out",
           isOpen ? 'translate-x-0' : 'translate-x-[calc(100%+2rem)]'
         )}>
-        <Card className="h-[70vh] flex flex-col shadow-2xl">
+        <Card className="h-[70vh] flex flex-col shadow-2xl bg-card">
           <CardHeader className="flex flex-row items-center justify-between border-b">
             <div className="flex items-center gap-3">
               <Avatar>
@@ -114,7 +114,7 @@ export default function ChatBot() {
                         "max-w-[75%] rounded-lg px-4 py-2 text-sm",
                         message.isUser
                           ? "bg-primary text-primary-foreground"
-                          : "bg-muted"
+                          : "bg-muted text-muted-foreground"
                       )}
                     >
                       {message.text}
@@ -157,7 +157,7 @@ export default function ChatBot() {
                 placeholder="Ask a question..."
                 disabled={isLoading}
               />
-              <Button type="submit" size="icon" disabled={isLoading}>
+              <Button type="submit" size="icon" disabled={isLoading} className="text-primary-foreground">
                 <Send className="h-4 w-4" />
                 <span className="sr-only">Send</span>
               </Button>
