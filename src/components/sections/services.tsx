@@ -52,10 +52,10 @@ export function Services() {
         <div className="text-center space-y-4 section-header-services max-w-3xl mx-auto">
           <span className="text-primary font-semibold">Our Services</span>
           <h2 className="text-3xl md:text-4xl font-headline font-bold text-foreground">
-            We Offer Special Solar Energy Solutions
+            Comprehensive Electrical Solutions
           </h2>
           <p className="text-lg text-muted-foreground">
-            We provide a comprehensive range of electrical services tailored for government contracts, ensuring quality, safety, and efficiency.
+            We provide a complete range of electrical services tailored for government contracts, ensuring quality, safety, and efficiency.
           </p>
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">

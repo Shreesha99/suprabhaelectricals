@@ -7,12 +7,12 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useRef } from 'react';
-import { ArrowDown, Wind, Zap, Car } from 'lucide-react';
+import { ArrowDown, Gavel, Building, HardHat } from 'lucide-react';
 
 const features = [
-    { icon: <Zap className="text-primary"/>, title: 'Your Solar Power', description: 'Solutions' },
-    { icon: <Wind className="text-primary"/>, title: 'Wind Grid Power', description: 'Concept' },
-    { icon: <Car className="text-primary"/>, title: 'EV Chargers for', description: 'Your Garage' },
+    { icon: <Gavel className="text-primary"/>, title: 'Government Contracts', description: 'Specializing in public tenders' },
+    { icon: <Building className="text-primary"/>, title: 'Commercial Projects', description: 'Installations for businesses' },
+    { icon: <HardHat className="text-primary"/>, title: 'Safety & Quality', description: 'Our top priorities' },
 ]
 
 export function Hero() {
@@ -72,9 +72,9 @@ export function Hero() {
       )}
       <div className="absolute inset-0 bg-black/60" />
       <div className="relative z-10 container text-center space-y-8 mt-auto">
-        <p className="text-lg text-primary font-bold tracking-wide uppercase hero-subtitle">Ditch the Past, Move Forward With Renewables</p>
+        <p className="text-lg text-primary font-bold tracking-wide uppercase hero-subtitle">Expert Electrical Contracting in Karnataka</p>
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-headline font-black tracking-tight uppercase drop-shadow-lg hero-title">
-          Power Your Future
+          Powering Public & Private Sectors
         </h1>
         <div className="flex gap-4 justify-center hero-buttons">
           <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold rounded-full px-8">

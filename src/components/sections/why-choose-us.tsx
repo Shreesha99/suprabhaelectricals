@@ -51,10 +51,10 @@ export function WhyChooseUs() {
         <div className="text-center space-y-4 section-header-why-choose-us">
             <span className="text-primary font-semibold">Why Choose Us</span>
             <h2 className="text-3xl md:text-4xl font-headline font-bold text-foreground">
-                Ready for Ecological Power
+                Your Trusted Electrical Partner
             </h2>
             <p className="max-w-2xl mx-auto text-lg text-muted-foreground">
-                Our commitment to excellence, sustainability, and customer satisfaction sets us apart.
+                Our commitment to excellence, safety, and customer satisfaction sets us apart.
             </p>
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
