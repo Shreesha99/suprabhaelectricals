@@ -7,7 +7,7 @@ import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { useRef } from "react";
-import { Gavel, ShieldCheck, Building2 } from "lucide-react";
+import { Gavel, ShieldCheck, Building2, Timer, Landmark } from "lucide-react";
 
 const highlights = [
   {
@@ -25,9 +25,9 @@ const highlights = [
 ];
 
 const counters = [
-  { label: "Years Experience", value: 25 },
-  { label: "Government Projects", value: 100 },
-  { label: "Compliance Record", value: 100, suffix: "%" },
+  { label: "Years of Experience", value: 25, icon: Timer },
+  { label: "Government Projects", value: 100, icon: Landmark },
+  { label: "Compliance Record", value: 100, suffix: "%", icon: ShieldCheck },
 ];
 
 export function Hero() {
@@ -75,31 +75,69 @@ export function Hero() {
 
       gsap.utils.toArray<HTMLElement>(".counter-wrap").forEach((wrap, i) => {
         const numberEl = wrap.querySelector(".hero-counter") as HTMLElement;
-        const lineEl = wrap.querySelector(".counter-line") as HTMLElement;
-        if (!numberEl || !lineEl) return;
+        const numberWrap = numberEl.parentElement as HTMLElement;
+        const ring = wrap.querySelector(".counter-ring") as SVGCircleElement;
+        const icon = wrap.querySelector(".counter-icon") as HTMLElement;
+
+        if (!numberEl || !ring || !icon || !numberWrap) return;
 
         const target = Number(numberEl.dataset.value);
-        gsap.set(numberEl, { innerText: 0 });
-        gsap.set(lineEl, { scaleX: 0, transformOrigin: "left" });
+        const suffix = numberEl.dataset.suffix || "+";
+        const radius = 52;
+        const circumference = 2 * Math.PI * radius;
 
-        gsap
-          .timeline({ delay: tl.duration() + i * 0.2 })
-          .to(lineEl, { scaleX: 1, duration: 3, ease: "power1.inOut" })
-          .to(
-            numberEl,
-            {
-              innerText: target,
-              duration: 2.6,
-              ease: "power1.inOut",
-              snap: { innerText: 1 },
-              onUpdate() {
-                numberEl.innerText = Math.round(
-                  Number(numberEl.innerText)
-                ).toString();
-              },
+        gsap.set(ring, {
+          strokeDasharray: circumference,
+          strokeDashoffset: circumference,
+        });
+
+        gsap.set(icon, { opacity: 0, scale: 0.6 });
+        gsap.set(numberWrap, { opacity: 1, scale: 1 });
+        gsap.set(numberEl, { innerText: 0 });
+
+        const counterTl = gsap.timeline({ delay: tl.duration() + i * 0.25 });
+
+        // Ring fill
+        counterTl.to(ring, {
+          strokeDashoffset: 0,
+          duration: 3,
+          ease: "power1.inOut",
+        });
+
+        // Count up
+        counterTl.to(
+          numberEl,
+          {
+            innerText: target,
+            duration: 2.6,
+            ease: "power1.inOut",
+            snap: { innerText: 1 },
+            onUpdate() {
+              numberEl.innerText =
+                Math.round(Number(numberEl.innerText)) + suffix;
             },
-            "-=2.3"
-          );
+            onComplete() {
+              numberEl.innerText = target + suffix;
+            },
+          },
+          "-=2.4"
+        );
+
+        // Infinite toggle loop
+        counterTl.add(() => {
+          gsap
+            .timeline({ repeat: -1 })
+            .to({}, { duration: 2 })
+            .to(numberWrap, { opacity: 0, scale: 0.85, duration: 0.3 })
+            .to(
+              icon,
+              { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.8)" },
+              "<"
+            )
+            .to({}, { duration: 2 })
+            .to(icon, { opacity: 0, scale: 0.8, duration: 0.3 })
+            .to(numberWrap, { opacity: 1, scale: 1, duration: 0.4 }, "<");
+        });
       });
 
       tl.to(
@@ -145,7 +183,6 @@ export function Hero() {
         />
       )}
 
-      {/* Overlay */}
       <div className="absolute inset-0 bg-black/70 dark:bg-black/80" />
 
       <div className="relative z-10 container px-4 py-24 sm:py-28">
@@ -163,49 +200,76 @@ export function Hero() {
             compliant, large-scale electrical infrastructure across Karnataka.
           </p>
 
-          {/* Counters */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 pt-6">
-            {counters.map((item) => (
-              <div key={item.label} className="counter-wrap text-center">
-                <div className="text-4xl sm:text-5xl font-bold text-primary tabular-nums">
-                  <span className="hero-counter" data-value={item.value}>
-                    0
-                  </span>
-                  {item.suffix}+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-12 pt-8">
+            {counters.map((item) => {
+              const Icon = item.icon;
+              return (
+                <div
+                  key={item.label}
+                  className="counter-wrap text-center space-y-4"
+                >
+                  <div className="relative mx-auto h-32 w-32">
+                    <svg
+                      viewBox="0 0 120 120"
+                      className="absolute inset-0 -rotate-90"
+                    >
+                      <circle
+                        cx="60"
+                        cy="60"
+                        r="52"
+                        stroke="rgba(255,255,255,0.15)"
+                        strokeWidth="8"
+                        fill="none"
+                      />
+                      <circle
+                        cx="60"
+                        cy="60"
+                        r="52"
+                        stroke="currentColor"
+                        strokeWidth="8"
+                        fill="none"
+                        className="counter-ring text-primary"
+                      />
+                    </svg>
+
+                    <div className="absolute inset-0 flex items-center justify-center text-3xl font-bold text-primary tabular-nums">
+                      <span
+                        className="hero-counter"
+                        data-value={item.value}
+                        data-suffix={item.suffix ?? "+"}
+                      >
+                        0
+                      </span>
+                    </div>
+
+                    <div className="counter-icon absolute inset-0 flex items-center justify-center opacity-0">
+                      <Icon className="h-8 w-8 text-primary" />
+                    </div>
+                  </div>
+
+                  <p className="text-xs uppercase tracking-wide text-white/60">
+                    {item.label}
+                  </p>
                 </div>
-                <div className="mt-3 h-[2px] bg-white/20 overflow-hidden">
-                  <div className="counter-line h-full bg-primary" />
-                </div>
-                <p className="mt-3 text-xs uppercase tracking-wide text-white/60">
-                  {item.label}
-                </p>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
-          {/* CTAs */}
           <div className="flex flex-col sm:flex-row justify-center gap-4 pt-6">
             <Button asChild size="lg" className="hero-cta">
               <Link href="#services">View Services</Link>
             </Button>
-
             <Button
               asChild
               size="lg"
               variant="outline"
-              className="
-    hero-cta
-    border-white/40
-    text-foreground
-    dark:hover:bg-white/20
-  "
+              className="hero-cta border-white/40 text-foreground dark:hover:bg-white/20"
             >
               <Link href="#contact">Contact Us</Link>
             </Button>
           </div>
         </div>
 
-        {/* Supporting icons */}
         <div className="hero-support mt-16 flex flex-wrap justify-center gap-6 sm:gap-10 text-white/60 text-sm">
           {highlights.map((item) => (
             <div key={item.title} className="flex items-center gap-2">
