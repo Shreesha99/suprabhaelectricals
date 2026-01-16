@@ -7,6 +7,7 @@ import {
   MapPin,
   AlertTriangle,
   ArrowRight,
+  Loader2,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -16,7 +17,8 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import { cn } from "@/lib/utils";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -48,6 +50,19 @@ const CONTACT_INFO = [
 export function Contact() {
   const container = useRef<HTMLDivElement | null>(null);
 
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    location: "",
+    message: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
+  type SubmitState = "idle" | "loading" | "success" | "error";
+  const [submitState, setSubmitState] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle");
+
   useGSAP(
     () => {
       gsap.fromTo(
@@ -65,39 +80,34 @@ export function Contact() {
           },
         }
       );
-
-      gsap.fromTo(
-        ".contact-left",
-        { x: -60, opacity: 0 },
-        {
-          x: 0,
-          opacity: 1,
-          duration: 0.8,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: ".contact-left",
-            start: "top 75%",
-          },
-        }
-      );
-
-      gsap.fromTo(
-        ".contact-form",
-        { x: 60, opacity: 0 },
-        {
-          x: 0,
-          opacity: 1,
-          duration: 0.9,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: ".contact-form",
-            start: "top 75%",
-          },
-        }
-      );
     },
     { scope: container }
   );
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (submitState !== "idle") return;
+
+    setSubmitState("loading");
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      if (!res.ok) throw new Error();
+
+      setSubmitState("success");
+      setForm({ name: "", email: "", location: "", message: "" });
+
+      setTimeout(() => setSubmitState("idle"), 5000);
+    } catch {
+      setSubmitState("error");
+      setTimeout(() => setSubmitState("idle"), 5000);
+    }
+  };
 
   return (
     <section
@@ -116,85 +126,117 @@ export function Contact() {
           </h2>
           <p className="text-lg text-muted-foreground">
             Reach out for government, PSU, and institutional electrical
-            projects. We respond to structured and serious enquiries only.
+            projects.
           </p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-16 items-start">
-          {/* LEFT – Authority & Info */}
-          <div className="contact-left space-y-10">
-            <div className="space-y-6">
-              {CONTACT_INFO.map((item, index) => {
-                const Icon = item.icon;
-                return (
-                  <div
-                    key={index}
-                    className="flex items-start gap-4 border-l-2 border-primary/30 pl-6"
-                  >
-                    <div className="mt-1">
-                      <Icon className="h-5 w-5 text-primary" />
-                    </div>
-                    <div>
-                      <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                        {item.label}
-                      </p>
-                      {item.href ? (
-                        <a
-                          href={item.href}
-                          className="text-lg font-medium text-foreground hover:text-primary transition-colors"
-                        >
-                          {item.value}
-                        </a>
-                      ) : (
-                        <p className="text-lg font-medium text-foreground">
-                          {item.value}
-                        </p>
-                      )}
-                    </div>
+          {/* LEFT */}
+          <div className="space-y-10">
+            {CONTACT_INFO.map((item, index) => {
+              const Icon = item.icon;
+              return (
+                <div
+                  key={index}
+                  className="flex items-start gap-4 border-l-2 border-primary/30 pl-6"
+                >
+                  <Icon className="h-5 w-5 text-primary mt-1" />
+                  <div>
+                    <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                      {item.label}
+                    </p>
+                    {item.href ? (
+                      <a
+                        href={item.href}
+                        className="text-lg font-medium hover:text-primary"
+                      >
+                        {item.value}
+                      </a>
+                    ) : (
+                      <p className="text-lg font-medium">{item.value}</p>
+                    )}
                   </div>
-                );
-              })}
-            </div>
+                </div>
+              );
+            })}
 
-            {/* Boundary Alert */}
             <Alert className="border-destructive/30 bg-destructive/10">
               <AlertTriangle className="h-4 w-4 text-destructive" />
-              <AlertDescription className="text-sm text-destructive-foreground/80">
-                We do <strong>not</strong> provide emergency electrical support.
-                This channel is strictly for project-based discussions and
-                official enquiries.
+              <AlertDescription className="text-sm">
+                This channel is strictly for project-based enquiries only.
               </AlertDescription>
             </Alert>
           </div>
 
-          {/* RIGHT – Structured Enquiry */}
-          <Card className="contact-form bg-background border-border shadow-xl">
-            <CardHeader className="space-y-1">
+          {/* RIGHT – FORM */}
+          <Card className="bg-background border-border shadow-xl">
+            <CardHeader>
               <CardTitle className="text-2xl font-headline">
                 Project Enquiry Form
               </CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Provide accurate details so we can evaluate your requirement.
-              </p>
             </CardHeader>
 
             <CardContent>
-              <form className="space-y-5">
-                <Input placeholder="Full Name / Organization" />
-                <Input type="email" placeholder="Official Email Address" />
-                <Input placeholder="Project Location" />
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <Input
+                  placeholder="Full Name / Organization"
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  required
+                />
+                <Input
+                  type="email"
+                  placeholder="Official Email Address"
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  required
+                />
+                <Input
+                  placeholder="Project Location"
+                  value={form.location}
+                  onChange={(e) =>
+                    setForm({ ...form, location: e.target.value })
+                  }
+                />
                 <Textarea
                   rows={5}
-                  placeholder="Briefly describe the project scope, capacity, or tender reference"
+                  placeholder="Describe project scope / tender reference"
+                  value={form.message}
+                  onChange={(e) =>
+                    setForm({ ...form, message: e.target.value })
+                  }
+                  required
                 />
 
                 <Button
                   type="submit"
                   size="lg"
-                  className="w-full font-bold flex items-center gap-2"
+                  disabled={submitState !== "idle"}
+                  className={cn(
+                    "w-full font-bold flex items-center justify-center gap-2 transition-all duration-300",
+                    submitState === "success" &&
+                      "bg-green-600 hover:bg-green-600 text-white",
+                    submitState === "error" &&
+                      "bg-destructive hover:bg-destructive text-destructive-foreground"
+                  )}
                 >
-                  Submit Enquiry
-                  <ArrowRight className="h-4 w-4" />
+                  {submitState === "idle" && (
+                    <>
+                      Submit Enquiry
+                      <ArrowRight className="h-4 w-4" />
+                    </>
+                  )}
+
+                  {submitState === "loading" && (
+                    <>
+                      Sending
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    </>
+                  )}
+
+                  {submitState === "success" && <>Request Sent ✓</>}
+
+                  {submitState === "error" && <>Request Failed ✕</>}
                 </Button>
               </form>
             </CardContent>
