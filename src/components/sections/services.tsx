@@ -229,7 +229,7 @@ export function Services() {
                 className={cn(
                   "service-item relative rounded-xl transition-colors overflow-hidden",
                   activeIndex === index &&
-                    "bg-muted/40 border-l-2 border-primary"
+                    "bg-muted/40 border-r-2 border-primary"
                 )}
                 onMouseEnter={() => {
                   isPaused.current = true;

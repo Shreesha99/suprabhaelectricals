@@ -39,25 +39,25 @@
     {
       "id": "service-govt",
       "description": "An imposing government building facade, representing government contracts.",
-      "imageUrl": "https://images.unsplash.com/photo-1494476105528-620b211f568d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxnb3Zlcm5tZW50JTIwYnVpbGRpbmd8ZW58MHx8fHwxNzY4MzI4MDg5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/service1.jpg",
       "imageHint": "government building"
     },
     {
       "id": "service-installations",
       "description": "An electrician working on a complex electrical panel.",
-      "imageUrl": "https://images.unsplash.com/photo-1517420704952-d9f39e95b41d?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGVsZWN0cmljYWwlMjBwYW5lbHxlbnwwfHwwfHx8MA%3D%3D",
+      "imageUrl": "/service2.jpg",
       "imageHint": "electrical panel"
     },
     {
       "id": "service-auditorium",
       "description": "Dramatic lighting in a modern empty auditorium.",
-      "imageUrl": "https://images.unsplash.com/photo-1722321974479-a6722bea8b23?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhdWRpdG9yaXVtJTIwbGlnaHRpbmd8ZW58MHx8fHwxNzY4NDEzOTM3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/service3.png",
       "imageHint": "auditorium lighting"
     },
     {
       "id": "service-infra",
       "description": "A view of a large university campus or institutional complex.",
-      "imageUrl": "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHx1bml2ZXJzaXR5JTIwY2FtcHVzfGVufDB8fHx8MTc2ODMzNjk0M3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/service4.jpg",
       "imageHint": "university campus"
     }
   ]
