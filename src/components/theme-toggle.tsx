@@ -27,18 +27,39 @@ export function ThemeToggle() {
         onClick={() => setTheme(isDark ? "light" : "dark")}
         className="relative h-10 w-10 rounded-full"
       >
+        {/* Outer ring (DARK MODE ONLY) */}
+        {isDark && (
+          <span
+            className="
+        pointer-events-none
+        absolute inset-0
+        rounded-full
+        border border-primary
+      "
+          />
+        )}
+
+        {/* Glow layer */}
+        {isDark && (
+          <span
+            className="
+        pointer-events-none
+        absolute inset-0
+        rounded-full
+        bg-primary/10
+      "
+          />
+        )}
+
+        {/* Icon */}
         <Zap
           className={cn(
-            "h-5 w-5 transition-all duration-300",
+            "relative z-10 h-5 w-5 transition-all duration-300",
             isDark
               ? "text-yellow-400 drop-shadow-[0_0_6px_rgba(250,204,21,0.6)]"
               : "text-muted-foreground"
           )}
         />
-
-        {isDark && (
-          <span className="absolute inset-0 rounded-full bg-yellow-400/10" />
-        )}
       </Button>
 
       {/* Premium label */}
