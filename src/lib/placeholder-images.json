@@ -15,25 +15,25 @@
     {
       "id": "project-geological-survey",
       "description": "A modern government building with complex architectural lighting.",
-      "imageUrl": "https://images.unsplash.com/photo-1494476105528-620b211f568d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxnb3Zlcm5tZW50JTIwYnVpbGRpbmd8ZW58MHx8fHwxNzY4MzI4MDg5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/gsi.jpg",
       "imageHint": "government building"
     },
     {
       "id": "project-cii-bangalore",
       "description": "Interior of a modern corporate office with sophisticated electrical fittings.",
-      "imageUrl": "https://images.unsplash.com/photo-1606836591695-4d58a73eba1e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxjb3Jwb3JhdGUlMjBvZmZpY2V8ZW58MHx8fHwxNzY4MzQ3Njc3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/cii.jpg",
       "imageHint": "corporate office"
     },
     {
       "id": "project-nit-surathkal",
       "description": "A large university campus building, showcasing institutional electrical work.",
-      "imageUrl": "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHx1bml2ZXJzaXR5JTIwY2FtcHVzfGVufDB8fHx8MTc2ODMzNjk0M3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/nitk.jpg",
       "imageHint": "university campus"
     },
     {
       "id": "project-auditorium",
       "description": "A large, well-lit modern auditorium, highlighting complex lighting and AV systems.",
-      "imageUrl": "https://images.unsplash.com/photo-1722321974479-a6722bea8b23?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhdWRpdG9yaXVtJTIwbGlnaHRpbmd8ZW58MHx8fHwxNzY4NDEzOTM3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/audi.png",
       "imageHint": "auditorium lighting"
     },
     {

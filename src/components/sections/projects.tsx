@@ -1,94 +1,175 @@
 "use client";
 
-import Image from 'next/image';
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { useGSAP } from '@gsap/react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
-import { useRef } from 'react';
+import Image from "next/image";
+import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
+import { useRef } from "react";
+import { cn } from "@/lib/utils";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const projectIds = [
-  'project-geological-survey',
-  'project-cii-bangalore',
-  'project-nit-surathkal',
-  'project-auditorium',
+  "project-geological-survey",
+  "project-cii-bangalore",
+  "project-nit-surathkal",
+  "project-auditorium",
 ];
 
-const projectDetails: { [key: string]: { title: string; location: string } } = {
-  'project-geological-survey': { title: 'Geological Survey of India', location: 'Bangalore' },
-  'project-cii-bangalore': { title: 'CII Office', location: 'Bangalore' },
-  'project-nit-surathkal': { title: 'New Wing, NIT', location: 'Surathkal' },
-  'project-auditorium': { title: 'Auditorium Electrification', location: 'Various Locations' },
-}
+const projectDetails: Record<string, { title: string; location: string }> = {
+  "project-geological-survey": {
+    title: "Geological Survey of India",
+    location: "Bangalore",
+  },
+  "project-cii-bangalore": {
+    title: "CII Office",
+    location: "Bangalore",
+  },
+  "project-nit-surathkal": {
+    title: "NIT Surathkal – New Wing",
+    location: "Surathkal",
+  },
+  "project-auditorium": {
+    title: "Auditorium Electrification",
+    location: "Multiple Locations",
+  },
+};
 
 export function Projects() {
-  const container = useRef(null);
-  const projects = projectIds.map(id => {
-    const image = PlaceHolderImages.find(p => p.id === id);
-    const details = projectDetails[id];
-    return { ...image, ...details };
+  const container = useRef<HTMLDivElement | null>(null);
+
+  const projects = projectIds.map((id) => {
+    const image = PlaceHolderImages.find((p) => p.id === id);
+    return {
+      ...image,
+      ...projectDetails[id],
+    };
   });
 
-  useGSAP(() => {
-    gsap.fromTo('.section-header-projects', { y: 50, opacity: 0 }, {
-        y: 0, opacity: 1, duration: 0.8, ease: 'power3.out',
-        scrollTrigger: {
-            trigger: '.section-header-projects',
-            start: 'top 85%',
+  useGSAP(
+    () => {
+      /* Section header */
+      gsap.fromTo(
+        ".projects-header > *",
+        { y: 40, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          stagger: 0.15,
+          duration: 0.8,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: ".projects-header",
+            start: "top 80%",
+          },
         }
-    });
+      );
 
-    gsap.utils.toArray<gsap.DOMTarget>('.project-card').forEach((card, i) => {
-        gsap.fromTo(card, { y: 50, opacity: 0 }, {
-            y: 0, opacity: 1, duration: 0.6, ease: 'power2.out',
+      /* Cards */
+      gsap.utils.toArray<HTMLElement>(".project-card").forEach((card) => {
+        gsap.fromTo(
+          card,
+          { y: 60, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.7,
+            ease: "power3.out",
             scrollTrigger: {
-                trigger: card,
-                start: 'top 90%',
-            }
-        });
-    });
+              trigger: card,
+              start: "top 85%",
+            },
+          }
+        );
 
-  }, { scope: container });
+        /* Image parallax */
+        const image = card.querySelector(".project-image");
+        if (image) {
+          gsap.fromTo(
+            image,
+            { scale: 1.1 },
+            {
+              scale: 1,
+              ease: "none",
+              scrollTrigger: {
+                trigger: card,
+                scrub: 1,
+              },
+            }
+          );
+        }
+      });
+    },
+    { scope: container }
+  );
 
   return (
-    <section id="projects" ref={container} className="py-24 lg:py-32 bg-background overflow-hidden">
-      <div className="container space-y-16">
-        <div className="text-center space-y-4 section-header-projects">
-          <span className="text-primary font-semibold">Our Work</span>
-          <h2 className="text-3xl md:text-4xl font-headline font-bold text-foreground">
-            Featured Projects
+    <section
+      id="projects"
+      ref={container}
+      className="py-28 lg:py-36 bg-background overflow-hidden"
+    >
+      <div className="container space-y-20">
+        {/* Header */}
+        <div className="projects-header text-center max-w-3xl mx-auto space-y-4">
+          <span className="text-primary font-semibold tracking-wide uppercase">
+            Our Work
+          </span>
+          <h2 className="text-3xl md:text-4xl font-headline font-bold">
+            Landmark Government Projects
           </h2>
-          <p className="max-w-2xl mx-auto text-lg text-muted-foreground">
-            A showcase of our successfully completed government and commercial electrical projects.
+          <p className="text-lg text-muted-foreground">
+            A selection of high-value, compliance-driven electrical
+            infrastructure projects executed across Karnataka.
           </p>
         </div>
-        <div className="grid sm:grid-cols-2 gap-8">
-          {projects.map((project, index) => (
-            project.imageUrl && (
-              <Card key={index} className="overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 group project-card border-border bg-card rounded-lg">
-                <div className="relative h-80 w-full">
-                  <Image
-                    src={project.imageUrl}
-                    alt={project.description || project.title}
-                    fill
-                    sizes="(max-width: 640px) 100vw, 50vw"
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    data-ai-hint={project.imageHint}
-                  />
+
+        {/* Grid */}
+        <div className="grid md:grid-cols-2 gap-10">
+          {projects.map(
+            (project, index) =>
+              project?.imageUrl && (
+                <div
+                  key={index}
+                  className="project-card group relative overflow-hidden rounded-2xl border border-border bg-card"
+                >
+                  {/* Image */}
+                  <div className="relative h-[22rem] w-full overflow-hidden">
+                    <Image
+                      src={project.imageUrl}
+                      alt={project.title}
+                      fill
+                      className="project-image object-cover transition-transform duration-700 group-hover:scale-105"
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      data-ai-hint={project.imageHint}
+                    />
+
+                    {/* Gradient overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-500" />
+                  </div>
+
+                  {/* Content */}
+                  <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-6 group-hover:translate-y-0 transition-transform duration-500">
+                    <span className="text-xs uppercase tracking-wide text-primary font-semibold">
+                      {project.location}
+                    </span>
+
+                    <h3 className="mt-1 text-xl font-bold text-white">
+                      {project.title}
+                    </h3>
+
+                    {/* Accent line */}
+                    <div className="mt-4 h-[2px] w-0 bg-primary group-hover:w-16 transition-all duration-500" />
+                  </div>
+
+                  {/* Subtle glow */}
+                  <div className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    <div className="absolute inset-0 rounded-2xl ring-1 ring-primary/20" />
+                  </div>
                 </div>
-                 <div className="p-6">
-                    <p className="text-sm text-primary font-semibold">{project.location}</p>
-                    <h3 className="font-bold text-white text-xl mt-1">{project.title}</h3>
-                </div>
-              </Card>
-            )
-          ))}
+              )
+          )}
         </div>
       </div>
     </section>
