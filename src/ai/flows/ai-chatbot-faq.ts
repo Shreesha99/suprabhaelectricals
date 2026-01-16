@@ -1,4 +1,4 @@
-'use server';
+"use server";
 
 /**
  * @fileOverview A chatbot for answering FAQs about Suprabha Electricals.
@@ -8,42 +8,49 @@
  * - AnswerFaqOutput - The return type for the answerFaq function.
  */
 
-import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
+import { ai } from "@/ai/genkit";
+import { z } from "genkit";
 
 const AnswerFaqInputSchema = z.object({
-  query: z.string().describe('The user query about Suprabha Electricals.'),
+  query: z.string().describe("The user query about Suprabha Electricals."),
 });
 export type AnswerFaqInput = z.infer<typeof AnswerFaqInputSchema>;
 
 const AnswerFaqOutputSchema = z.object({
-  answer: z.string().describe('The answer to the user query.'),
+  answer: z.string().describe("The answer to the user query."),
 });
 export type AnswerFaqOutput = z.infer<typeof AnswerFaqOutputSchema>;
 
 const GetProjectPortfolioSchema = z.object({
-  projectPortfolio: z.string().describe('The project portfolio of Suprabha Electricals.'),
+  projectPortfolio: z
+    .string()
+    .describe("The project portfolio of Suprabha Electricals."),
 });
 
-const getProjectPortfolio = ai.defineTool({
-  name: 'getProjectPortfolio',
-  description: 'Retrieves the project portfolio of Suprabha Electricals.',
-  inputSchema: z.object({}),
-  outputSchema: GetProjectPortfolioSchema,
-}, async () => {
-  // Placeholder implementation - replace with actual data retrieval logic
-  const projectPortfolio = `Suprabha Electricals has worked on projects like Geological survey of India Bangalore, CII bangalore, NIT surathkal and so many others where we set up auditoriums and new wing of a NIT surathkal`;
-  return {projectPortfolio};
-});
+const getProjectPortfolio = ai.defineTool(
+  {
+    name: "getProjectPortfolio",
+    description: "Retrieves the project portfolio of Suprabha Electricals.",
+    inputSchema: z.object({}),
+    outputSchema: GetProjectPortfolioSchema,
+  },
+  async () => {
+    // Placeholder implementation - replace with actual data retrieval logic
+    const projectPortfolio = `Suprabha Electricals has worked on projects like Geological survey of India Bengaluru, CII Bengaluru, NIT surathkal and so many others where we set up auditoriums and new wing of a NIT surathkal`;
+    return { projectPortfolio };
+  }
+);
 
-export async function answerFaq(input: AnswerFaqInput): Promise<AnswerFaqOutput> {
+export async function answerFaq(
+  input: AnswerFaqInput
+): Promise<AnswerFaqOutput> {
   return answerFaqFlow(input);
 }
 
 const prompt = ai.definePrompt({
-  name: 'answerFaqPrompt',
-  input: {schema: AnswerFaqInputSchema},
-  output: {schema: AnswerFaqOutputSchema},
+  name: "answerFaqPrompt",
+  input: { schema: AnswerFaqInputSchema },
+  output: { schema: AnswerFaqOutputSchema },
   tools: [getProjectPortfolio],
   system: `You are a chatbot answering questions about Suprabha Electricals.
   Suprabha Electricals is an electrical contractor focusing on government electrical projects in Karnataka, India.
@@ -57,12 +64,12 @@ const prompt = ai.definePrompt({
 
 const answerFaqFlow = ai.defineFlow(
   {
-    name: 'answerFaqFlow',
+    name: "answerFaqFlow",
     inputSchema: AnswerFaqInputSchema,
     outputSchema: AnswerFaqOutputSchema,
   },
-  async input => {
-    const {output} = await prompt(input);
+  async (input) => {
+    const { output } = await prompt(input);
     return output!;
   }
 );

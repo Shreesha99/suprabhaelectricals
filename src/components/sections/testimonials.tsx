@@ -21,7 +21,7 @@ const testimonials = [
     title: "Project Manager, Geological Survey of India",
     image: "https://picsum.photos/seed/avatar1/100/100",
     quote:
-      "Suprabha Electricals demonstrated exceptional execution discipline and technical compliance during our Bangalore facility upgrade. Their coordination with government bodies and adherence to standards was exemplary.",
+      "Suprabha Electricals demonstrated exceptional execution discipline and technical compliance during our Bengaluru facility upgrade. Their coordination with government bodies and adherence to standards was exemplary.",
     featured: true,
   },
   {
@@ -33,7 +33,7 @@ const testimonials = [
   },
   {
     name: "Prakash Menon",
-    title: "Director, CII Bangalore",
+    title: "Director, CII Bengaluru",
     image: "https://picsum.photos/seed/avatar3/100/100",
     quote:
       "Their ability to handle large-scale institutional projects with precision makes them one of the most reliable electrical contractors we have worked with.",

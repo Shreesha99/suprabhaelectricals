@@ -12,7 +12,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const projectIds = [
   "project-geological-survey",
-  "project-cii-bangalore",
+  "project-cii-Bengaluru",
   "project-nit-surathkal",
   "project-auditorium",
 ];
@@ -20,11 +20,11 @@ const projectIds = [
 const projectDetails: Record<string, { title: string; location: string }> = {
   "project-geological-survey": {
     title: "Geological Survey of India",
-    location: "Bangalore",
+    location: "Bengaluru",
   },
-  "project-cii-bangalore": {
+  "project-cii-Bengaluru": {
     title: "CII Office",
-    location: "Bangalore",
+    location: "Bengaluru",
   },
   "project-nit-surathkal": {
     title: "NIT Surathkal – New Wing",
