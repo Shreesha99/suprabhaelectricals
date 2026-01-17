@@ -9,6 +9,11 @@ export const metadata: Metadata = {
   title: "Suprabha Electricals",
   description:
     "Top-tier electrical contractor for government projects in Karnataka, India.",
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({
