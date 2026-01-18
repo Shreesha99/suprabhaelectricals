@@ -7,6 +7,7 @@ import { Projects } from "@/components/sections/projects";
 import { Testimonials } from "@/components/sections/testimonials";
 import { Contact } from "@/components/sections/contact";
 import ChatBot from "@/components/chat-bot";
+import TimelinePage from "@/components/sections/timeline";
 
 export default function Home() {
   return (
@@ -15,6 +16,7 @@ export default function Home() {
       <main className="flex-1">
         <Hero />
         <Services />
+        <TimelinePage />
         <About />
         <Projects />
         <Testimonials />
