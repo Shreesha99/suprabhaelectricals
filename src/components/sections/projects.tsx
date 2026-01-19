@@ -74,6 +74,61 @@ export function Projects() {
   >(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
+  useEffect(() => {
+    if (!activeProject) return;
+
+    const scrollY = window.scrollY;
+    const scrollbarWidth =
+      window.innerWidth - document.documentElement.clientWidth;
+
+    // Lock body scroll
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = "0";
+    document.body.style.right = "0";
+    document.body.style.width = "100%";
+    document.body.style.paddingRight = `${scrollbarWidth}px`;
+
+    return () => {
+      // Restore body scroll
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
+      document.body.style.width = "";
+      document.body.style.paddingRight = "";
+
+      window.scrollTo(0, scrollY);
+    };
+  }, [activeProject]);
+  useEffect(() => {
+    if (!activeProject) return;
+
+    const scrollY = window.scrollY;
+    const scrollbarWidth =
+      window.innerWidth - document.documentElement.clientWidth;
+
+    // Lock body scroll
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = "0";
+    document.body.style.right = "0";
+    document.body.style.width = "100%";
+    document.body.style.paddingRight = `${scrollbarWidth}px`;
+
+    return () => {
+      // Restore body scroll
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
+      document.body.style.width = "";
+      document.body.style.paddingRight = "";
+
+      window.scrollTo(0, scrollY);
+    };
+  }, [activeProject]);
+
   /* ---------- ENTRY ANIMATIONS ---------- */
   useGSAP(
     () => {
