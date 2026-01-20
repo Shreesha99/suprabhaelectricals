@@ -11,9 +11,9 @@ import { projects } from "@/data/projects";
 gsap.registerPlugin(ScrollTrigger);
 
 /* ================= PROJECT DATA ================= */
-const IMAGE_DURATION = 4000;
+const IMAGE_DURATION = 5000;
 const PROJECTS_PER_PAGE = 4;
-const PAGE_DURATION = 5000;
+const PAGE_DURATION = 15000;
 
 /* ================= COMPONENT ================= */
 

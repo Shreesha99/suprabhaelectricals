@@ -63,7 +63,7 @@ export const projects = [
   {
     id: "JNV Chikamangaluru",
     title: "JNV Chikamangaluru",
-    location: "Multiple Locations",
+    location: "Chikamangaluru",
     description:
       "Design and execution of electrical systems for auditoriums including lighting, power distribution, control panels, and safety systems.",
     images: [
