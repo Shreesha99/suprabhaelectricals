@@ -11,6 +11,8 @@ gsap.registerPlugin(ScrollTrigger);
 
 /* ================= PROJECT DATA ================= */
 const IMAGE_DURATION = 4000;
+const PROJECTS_PER_PAGE = 4;
+const PAGE_DURATION = 5000;
 
 const projects = [
   {
@@ -74,6 +76,42 @@ const projects = [
       "Design and execution of electrical systems for auditoriums including lighting, power distribution, control panels, and safety systems.",
     images: ["/projects/auditorium/1.jpg", "/projects/auditorium/2.jpg"],
   },
+  {
+    id: "gsi2",
+    title: "Geological Survey of India",
+    location: "Bengaluru",
+    description:
+      "Execution of HT & LT electrical infrastructure, panel installations, cabling, earthing, and statutory compliance for a central government research facility.",
+    images: [
+      "/projects/gsi/1.jpg",
+      "/projects/gsi/2.jpeg",
+      "/projects/gsi/3.jpeg",
+      "/projects/gsi/4.jpeg",
+      "/projects/gsi/5.jpeg",
+      "/projects/gsi/6.jpeg",
+      "/projects/gsi/7.jpeg",
+      "/projects/gsi/8.jpeg",
+      "/projects/gsi/9.jpeg",
+    ],
+  },
+  {
+    id: "gsi1",
+    title: "Geological Survey of India",
+    location: "Bengaluru",
+    description:
+      "Execution of HT & LT electrical infrastructure, panel installations, cabling, earthing, and statutory compliance for a central government research facility.",
+    images: [
+      "/projects/gsi/1.jpg",
+      "/projects/gsi/2.jpeg",
+      "/projects/gsi/3.jpeg",
+      "/projects/gsi/4.jpeg",
+      "/projects/gsi/5.jpeg",
+      "/projects/gsi/6.jpeg",
+      "/projects/gsi/7.jpeg",
+      "/projects/gsi/8.jpeg",
+      "/projects/gsi/9.jpeg",
+    ],
+  },
 ];
 
 /* ================= COMPONENT ================= */
@@ -83,6 +121,22 @@ export function Projects() {
   const imageWrapperRef = useRef<HTMLDivElement | null>(null);
   const progressRef = useRef<SVGCircleElement | null>(null);
   const directionRef = useRef<1 | -1>(1);
+  const [pageIndex, setPageIndex] = useState(0);
+  const pageProgressRef = useRef<SVGCircleElement | null>(null);
+  const pageTimelineRef = useRef<gsap.core.Tween | null>(null);
+  const getIndicatorWidth = (count: number) => {
+    if (count <= 5) return 28;
+    if (count <= 10) return 20;
+    if (count <= 20) return 14;
+    if (count <= 40) return 10;
+    return 6;
+  };
+
+  const totalPages = Math.ceil(projects.length / PROJECTS_PER_PAGE);
+  const pagedProjects = projects.slice(
+    pageIndex * PROJECTS_PER_PAGE,
+    pageIndex * PROJECTS_PER_PAGE + PROJECTS_PER_PAGE
+  );
 
   const [activeProject, setActiveProject] = useState<
     (typeof projects)[0] | null
@@ -93,53 +147,12 @@ export function Projects() {
     if (!activeProject) return;
 
     const scrollY = window.scrollY;
-    const scrollbarWidth =
-      window.innerWidth - document.documentElement.clientWidth;
 
-    // Lock body scroll
-    document.body.style.position = "fixed";
-    document.body.style.top = `-${scrollY}px`;
-    document.body.style.left = "0";
-    document.body.style.right = "0";
-    document.body.style.width = "100%";
-    document.body.style.paddingRight = `${scrollbarWidth}px`;
+    // Lock scroll safely (App Router compatible)
+    document.documentElement.style.overflow = "hidden";
 
     return () => {
-      // Restore body scroll
-      document.body.style.position = "";
-      document.body.style.top = "";
-      document.body.style.left = "";
-      document.body.style.right = "";
-      document.body.style.width = "";
-      document.body.style.paddingRight = "";
-
-      window.scrollTo(0, scrollY);
-    };
-  }, [activeProject]);
-  useEffect(() => {
-    if (!activeProject) return;
-
-    const scrollY = window.scrollY;
-    const scrollbarWidth =
-      window.innerWidth - document.documentElement.clientWidth;
-
-    // Lock body scroll
-    document.body.style.position = "fixed";
-    document.body.style.top = `-${scrollY}px`;
-    document.body.style.left = "0";
-    document.body.style.right = "0";
-    document.body.style.width = "100%";
-    document.body.style.paddingRight = `${scrollbarWidth}px`;
-
-    return () => {
-      // Restore body scroll
-      document.body.style.position = "";
-      document.body.style.top = "";
-      document.body.style.left = "";
-      document.body.style.right = "";
-      document.body.style.width = "";
-      document.body.style.paddingRight = "";
-
+      document.documentElement.style.overflow = "";
       window.scrollTo(0, scrollY);
     };
   }, [activeProject]);
@@ -219,6 +232,39 @@ export function Projects() {
       );
   }, [activeIndex]);
 
+  useEffect(() => {
+    // 🚫 If modal is open, DO NOT autoplay pages
+    if (activeProject) {
+      pageTimelineRef.current?.kill();
+      return;
+    }
+
+    if (!pageProgressRef.current) return;
+
+    const radius = 16;
+    const circumference = 2 * Math.PI * radius;
+
+    pageTimelineRef.current?.kill();
+
+    gsap.set(pageProgressRef.current, {
+      strokeDasharray: circumference,
+      strokeDashoffset: circumference,
+    });
+
+    pageTimelineRef.current = gsap.to(pageProgressRef.current, {
+      strokeDashoffset: 0,
+      duration: PAGE_DURATION / 1000,
+      ease: "linear",
+      onComplete: () => {
+        setPageIndex((p) => (p === totalPages - 1 ? 0 : p + 1));
+      },
+    });
+
+    return () => {
+      pageTimelineRef.current?.kill();
+    };
+  }, [pageIndex, totalPages, activeProject]);
+
   /* ---------- AUTOPLAY + PROGRESS ---------- */
   useEffect(() => {
     if (!activeProject || !progressRef.current) return;
@@ -254,7 +300,7 @@ export function Projects() {
         ref={container}
         className="py-16 md:py-20 lg:py-24 bg-background"
       >
-        <div className="container space-y-12 md:space-y-16">
+        <div className="container space-y-12 md:space-y-16 relative">
           <div className="projects-header text-center max-w-3xl mx-auto space-y-4">
             <span className="text-primary font-semibold uppercase tracking-wide">
               Our Work
@@ -267,10 +313,71 @@ export function Projects() {
               execution discipline.
             </p>
           </div>
+          {/* GRID PAGINATION — RESPONSIVE */}
+          <div className="flex justify-end">
+            <div className="flex items-center gap-2 sm:gap-3">
+              {/* Hide label on mobile */}
+              <span className="text-muted-foreground">Pages</span>
+
+              {Array.from({ length: totalPages }).map((_, i) => (
+                <button
+                  type="button"
+                  key={i}
+                  onClick={() => {
+                    pageTimelineRef.current?.kill();
+                    setPageIndex(i);
+                  }}
+                  className="
+          relative
+          flex items-center justify-center
+          text-foreground
+          h-8 w-8
+          sm:h-9 sm:w-9
+          md:h-10 md:w-10
+        "
+                >
+                  <svg
+                    className="absolute inset-0"
+                    width="100%"
+                    height="100%"
+                    viewBox="0 0 40 40"
+                  >
+                    <circle
+                      cx="20"
+                      cy="20"
+                      r="16"
+                      stroke="hsl(var(--muted-foreground))"
+                      strokeWidth="2"
+                      fill="none"
+                    />
+
+                    {i === pageIndex && (
+                      <circle
+                        ref={pageProgressRef}
+                        cx="20"
+                        cy="20"
+                        r="16"
+                        stroke="hsl(var(--foreground))"
+                        strokeWidth="2"
+                        fill="none"
+                        strokeLinecap="round"
+                        transform="rotate(-90 20 20)"
+                      />
+                    )}
+                  </svg>
+
+                  <span className="relative z-10 text-xs sm:text-sm font-semibold">
+                    {i + 1}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
 
           <div className="grid gap-8 md:grid-cols-2">
-            {projects.map((project) => (
+            {pagedProjects.map((project) => (
               <button
+                type="button"
                 key={project.id}
                 onClick={() => {
                   setActiveProject(project);
@@ -372,21 +479,32 @@ export function Projects() {
                   </svg>
                 </div>
 
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-                  {activeProject.images.map((_, i) => (
-                    <button
-                      key={i}
-                      onClick={() => {
-                        directionRef.current = i > activeIndex ? 1 : -1;
-                        setActiveIndex(i);
-                      }}
-                      className={`h-1.5 w-8 sm:w-10 rounded-full ${
-                        i === activeIndex
-                          ? "bg-white"
-                          : "bg-white/30 hover:bg-white/50"
-                      }`}
-                    />
-                  ))}
+                <div className="absolute bottom-4 inset-x-0 flex justify-center px-4 pointer-events-auto">
+                  <div className="w-full max-w-[520px] overflow-hidden">
+                    <div className="flex items-center justify-center gap-1">
+                      {activeProject.images.map((_, i) => {
+                        const dotWidth = getIndicatorWidth(
+                          activeProject.images.length
+                        );
+
+                        return (
+                          <button
+                            key={i}
+                            onClick={() => {
+                              directionRef.current = i > activeIndex ? 1 : -1;
+                              setActiveIndex(i);
+                            }}
+                            style={{ width: dotWidth }}
+                            className={`h-1.5 rounded-full transition-all duration-300 ${
+                              i === activeIndex
+                                ? "bg-white"
+                                : "bg-white/30 hover:bg-white/50"
+                            }`}
+                          />
+                        );
+                      })}
+                    </div>
+                  </div>
                 </div>
 
                 {activeProject.images.length > 1 && (
