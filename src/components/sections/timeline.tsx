@@ -43,7 +43,6 @@ const TIMELINE = [
 export default function TimelinePage() {
   const sectionRef = useRef<HTMLDivElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
-  const activeIndexRef = useRef<number | null>(null);
 
   useGSAP(() => {
     if (!sectionRef.current || !trackRef.current) return;
@@ -55,6 +54,16 @@ export default function TimelinePage() {
 
     const snapPoints = cards.map((_, i) => i / (cards.length - 1));
 
+    /* 🔒 RESET ALL ARROWS ON INIT */
+    cards.forEach((card) => {
+      const arrows = card.querySelectorAll<SVGPathElement>(".arrow");
+      gsap.set(arrows, {
+        strokeDasharray: 100,
+        strokeDashoffset: 100,
+        opacity: 1,
+      });
+    });
+
     gsap.to(trackRef.current, {
       x: () => -maxTranslate,
       ease: "none",
@@ -65,52 +74,43 @@ export default function TimelinePage() {
         scrub: 1,
         pin: true,
         anticipatePin: 1,
+
         snap: {
           snapTo: snapPoints,
           duration: { min: 0.3, max: 0.6 },
           ease: "power2.out",
         },
 
-        onUpdate: (self) => {
+        // ✅ CORRECT PLACE
+        onSnapComplete: (self: ScrollTrigger) => {
           const activeIndex = Math.round(self.progress * (cards.length - 1));
 
-          // 🔁 ONLY run when focus changes
-          if (activeIndexRef.current !== activeIndex) {
-            activeIndexRef.current = activeIndex;
+          const card = cards[activeIndex];
+          if (!card) return;
 
-            const card = cards[activeIndex];
-            if (!card) return;
+          const arrows = card.querySelectorAll<SVGPathElement>(".arrow");
 
-            const bars = card.querySelectorAll<SVGRectElement>(".bar");
-            const arrows = card.querySelectorAll<SVGPathElement>(".arrow");
+          // reset
+          gsap.killTweensOf(arrows);
+          gsap.set(arrows, {
+            strokeDasharray: 100,
+            strokeDashoffset: 100,
+            opacity: 1,
+          });
 
-            // HARD RESET (VISIBILITY GUARANTEED)
-            gsap.set(bars, { scaleY: 0, transformOrigin: "bottom" });
-            gsap.set(arrows, {
-              strokeDasharray: 100,
-              strokeDashoffset: 100,
-              opacity: 1,
-            });
+          // animate AFTER snap finishes
+          gsap.to(arrows, {
+            strokeDashoffset: 0,
+            duration: 1.5,
+            ease: "power2.out",
+            stagger: 0.15,
+            delay: 0.25,
+          });
+        },
 
-            // 🔥 STRONG, VISIBLE TIMELINE
-            gsap
-              .timeline()
-              .to(bars[0], { scaleY: 1, duration: 0.6 })
-              .to(bars[1], { scaleY: 1, duration: 0.6 }, "+=0.15")
-              .to(bars[2], { scaleY: 1, duration: 0.6 }, "+=0.15")
-              .to(
-                arrows,
-                {
-                  strokeDashoffset: 0,
-                  duration: 0.8,
-                  stagger: 0.15,
-                  ease: "power2.out",
-                },
-                "+=0.25"
-              );
-          }
+        onUpdate: (self: ScrollTrigger) => {
+          const activeIndex = Math.round(self.progress * (cards.length - 1));
 
-          // EXISTING focus visuals stay unchanged
           cards.forEach((card, index) => {
             const d = Math.abs(index - activeIndex);
 
@@ -146,7 +146,7 @@ export default function TimelinePage() {
         <h1 className="mt-3 text-4xl md:text-5xl font-bold">
           Timeline of Excellence
         </h1>
-        <h1 className=" text-primary mt-3 text-xl md:text-xl font-bold">
+        <h1 className="text-primary mt-3 text-xl font-bold">
           Scroll to view full journey
         </h1>
         <p className="mt-4 text-muted-foreground text-lg">
@@ -172,11 +172,9 @@ export default function TimelinePage() {
                 lg:min-w-[60vw]
                 will-change-transform
               "
-              style={{
-                width: "clamp(280px, 80vw, 640px)",
-              }}
+              style={{ width: "clamp(280px, 80vw, 640px)" }}
             >
-              {/* 📈 GROWTH ICON */}
+              {/* 📈 ICON */}
               <svg
                 className="absolute bottom-6 right-6 w-12 h-14 opacity-75"
                 viewBox="0 0 48 48"
@@ -222,10 +220,6 @@ export default function TimelinePage() {
                   {item.description}
                 </p>
               </div>
-
-              {/* <div className="mt-10 h-1 w-full bg-border rounded-full overflow-hidden">
-                <div className="h-full w-1/3 bg-primary rounded-full" />
-              </div> */}
             </div>
           ))}
         </div>
@@ -235,8 +229,6 @@ export default function TimelinePage() {
       <style>{`
         .bar {
           fill: hsl(var(--primary));
-          transform-origin: bottom;
-          transform: scaleY(1);
         }
 
         .arrow {
@@ -245,9 +237,9 @@ export default function TimelinePage() {
           fill: none;
           stroke-linecap: round;
           stroke-linejoin: round;
-          stroke-dasharray: 1;
-          stroke-dashoffset: 1;
-          transform: translateY(-12px);
+          stroke-dasharray: 100;
+          stroke-dashoffset: 100;
+          transform: translateY(-10px);
         }
       `}</style>
     </section>
