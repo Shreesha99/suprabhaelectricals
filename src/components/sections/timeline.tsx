@@ -43,6 +43,7 @@ const TIMELINE = [
 export default function TimelinePage() {
   const sectionRef = useRef<HTMLDivElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
+  const activeIndexRef = useRef<number | null>(null);
 
   useGSAP(() => {
     if (!sectionRef.current || !trackRef.current) return;
@@ -73,10 +74,46 @@ export default function TimelinePage() {
         onUpdate: (self) => {
           const activeIndex = Math.round(self.progress * (cards.length - 1));
 
+          // 🔁 ONLY run when focus changes
+          if (activeIndexRef.current !== activeIndex) {
+            activeIndexRef.current = activeIndex;
+
+            const card = cards[activeIndex];
+            if (!card) return;
+
+            const bars = card.querySelectorAll<SVGRectElement>(".bar");
+            const arrows = card.querySelectorAll<SVGPathElement>(".arrow");
+
+            // HARD RESET (VISIBILITY GUARANTEED)
+            gsap.set(bars, { scaleY: 0, transformOrigin: "bottom" });
+            gsap.set(arrows, {
+              strokeDasharray: 100,
+              strokeDashoffset: 100,
+              opacity: 1,
+            });
+
+            // 🔥 STRONG, VISIBLE TIMELINE
+            gsap
+              .timeline()
+              .to(bars[0], { scaleY: 1, duration: 0.6 })
+              .to(bars[1], { scaleY: 1, duration: 0.6 }, "+=0.15")
+              .to(bars[2], { scaleY: 1, duration: 0.6 }, "+=0.15")
+              .to(
+                arrows,
+                {
+                  strokeDashoffset: 0,
+                  duration: 0.8,
+                  stagger: 0.15,
+                  ease: "power2.out",
+                },
+                "+=0.25"
+              );
+          }
+
+          // EXISTING focus visuals stay unchanged
           cards.forEach((card, index) => {
             const d = Math.abs(index - activeIndex);
 
-            // focus logic (unchanged)
             gsap.to(card, {
               opacity: d === 0 ? 1 : d === 1 ? 0.55 : 0.25,
               scale: d === 0 ? 1 : 0.95,
@@ -88,48 +125,6 @@ export default function TimelinePage() {
               duration: 0.35,
               ease: "power2.out",
             });
-
-            // 📈 SLOW, WEIGHTY GROWTH ANIMATION
-            if (d === 0 && !card.dataset.animated) {
-              card.dataset.animated = "true";
-
-              const bars = card.querySelectorAll<SVGRectElement>(".bar");
-              const arrows = card.querySelectorAll<SVGPathElement>(".arrow");
-
-              const tl = gsap.timeline({
-                defaults: { ease: "power2.out" },
-              });
-
-              tl.to(bars[0], {
-                scaleY: 1,
-                duration: 0.45,
-              })
-                .to(
-                  bars[1],
-                  {
-                    scaleY: 1,
-                    duration: 0.45,
-                  },
-                  "+=0.15"
-                )
-                .to(
-                  bars[2],
-                  {
-                    scaleY: 1,
-                    duration: 0.45,
-                  },
-                  "+=0.15"
-                )
-                .to(
-                  arrows,
-                  {
-                    strokeDashoffset: 0,
-                    duration: 0.6,
-                    stagger: 0.15,
-                  },
-                  "+=0.2"
-                );
-            }
           });
         },
       },
