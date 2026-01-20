@@ -34,6 +34,8 @@ export function Projects() {
   };
 
   const totalPages = Math.ceil(projects.length / PROJECTS_PER_PAGE);
+  const showPagination = projects.length > PROJECTS_PER_PAGE;
+
   const pagedProjects = projects.slice(
     pageIndex * PROJECTS_PER_PAGE,
     pageIndex * PROJECTS_PER_PAGE + PROJECTS_PER_PAGE
@@ -215,65 +217,66 @@ export function Projects() {
             </p>
           </div>
           {/* GRID PAGINATION — RESPONSIVE */}
-          <div className="flex justify-end">
-            <div className="flex items-center gap-2 sm:gap-3">
-              {/* Hide label on mobile */}
-              <span className="text-muted-foreground">Pages</span>
+          {showPagination && (
+            <div className="flex justify-end">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <span className="text-muted-foreground">Pages</span>
 
-              {Array.from({ length: totalPages }).map((_, i) => (
-                <button
-                  type="button"
-                  key={i}
-                  onClick={() => {
-                    pageTimelineRef.current?.kill();
-                    setPageIndex(i);
-                  }}
-                  className="
-          relative
-          flex items-center justify-center
-          text-foreground
-          h-8 w-8
-          sm:h-9 sm:w-9
-          md:h-10 md:w-10
-        "
-                >
-                  <svg
-                    className="absolute inset-0"
-                    width="100%"
-                    height="100%"
-                    viewBox="0 0 40 40"
+                {Array.from({ length: totalPages }).map((_, i) => (
+                  <button
+                    type="button"
+                    key={i}
+                    onClick={() => {
+                      pageTimelineRef.current?.kill();
+                      setPageIndex(i);
+                    }}
+                    className="
+            relative
+            flex items-center justify-center
+            text-foreground
+            h-8 w-8
+            sm:h-9 sm:w-9
+            md:h-10 md:w-10
+          "
                   >
-                    <circle
-                      cx="20"
-                      cy="20"
-                      r="16"
-                      stroke="hsl(var(--muted-foreground))"
-                      strokeWidth="2"
-                      fill="none"
-                    />
-
-                    {i === pageIndex && (
+                    <svg
+                      className="absolute inset-0"
+                      width="100%"
+                      height="100%"
+                      viewBox="0 0 40 40"
+                    >
                       <circle
-                        ref={pageProgressRef}
                         cx="20"
                         cy="20"
                         r="16"
-                        stroke="hsl(var(--foreground))"
+                        stroke="hsl(var(--muted-foreground))"
                         strokeWidth="2"
                         fill="none"
-                        strokeLinecap="round"
-                        transform="rotate(-90 20 20)"
                       />
-                    )}
-                  </svg>
 
-                  <span className="relative z-10 text-xs sm:text-sm font-semibold">
-                    {i + 1}
-                  </span>
-                </button>
-              ))}
+                      {i === pageIndex && (
+                        <circle
+                          ref={pageProgressRef}
+                          cx="20"
+                          cy="20"
+                          r="16"
+                          stroke="hsl(var(--foreground))"
+                          strokeWidth="2"
+                          fill="none"
+                          strokeLinecap="round"
+                          transform="rotate(-90 20 20)"
+                        />
+                      )}
+                    </svg>
+
+                    <span className="relative z-10 text-xs sm:text-sm font-semibold">
+                      {i + 1}
+                    </span>
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           <div className="grid gap-8 md:grid-cols-2">
             {pagedProjects.map((project) => (
