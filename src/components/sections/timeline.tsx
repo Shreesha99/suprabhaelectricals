@@ -43,6 +43,8 @@ const TIMELINE = [
 export default function TimelinePage() {
   const sectionRef = useRef<HTMLDivElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
+  const triggerRef = useRef<ScrollTrigger | null>(null);
+  const activeIndexRef = useRef(0);
 
   useGSAP(() => {
     if (!sectionRef.current || !trackRef.current) return;
@@ -52,19 +54,23 @@ export default function TimelinePage() {
     const viewportWidth = window.innerWidth;
     const maxTranslate = totalWidth - viewportWidth;
 
-    const snapPoints = cards.map((_, i) => i / (cards.length - 1));
+    const totalCards = cards.length - 1;
+    let lastSnapIndex = 0;
 
-    /* 🔒 RESET ALL ARROWS ON INIT */
+    // reset arrows + bars
     cards.forEach((card) => {
-      const arrows = card.querySelectorAll<SVGPathElement>(".arrow");
-      gsap.set(arrows, {
+      gsap.set(card.querySelectorAll(".arrow"), {
         strokeDasharray: 100,
         strokeDashoffset: 100,
         opacity: 1,
       });
+      gsap.set(card.querySelectorAll(".bar"), {
+        scaleY: 1,
+        transformOrigin: "bottom center",
+      });
     });
 
-    gsap.to(trackRef.current, {
+    const tween = gsap.to(trackRef.current, {
       x: () => -maxTranslate,
       ease: "none",
       scrollTrigger: {
@@ -76,40 +82,59 @@ export default function TimelinePage() {
         anticipatePin: 1,
 
         snap: {
-          snapTo: snapPoints,
+          snapTo: (progress) => {
+            const rawIndex = Math.round(progress * totalCards);
+            const clampedIndex = Math.max(
+              lastSnapIndex - 1,
+              Math.min(lastSnapIndex + 1, rawIndex)
+            );
+            return clampedIndex / totalCards;
+          },
           duration: { min: 0.3, max: 0.6 },
           ease: "power2.out",
         },
 
-        // ✅ CORRECT PLACE
-        onSnapComplete: (self: ScrollTrigger) => {
-          const activeIndex = Math.round(self.progress * (cards.length - 1));
+        onSnapComplete: (self) => {
+          const activeIndex = Math.round(self.progress * totalCards);
+          lastSnapIndex = activeIndex;
+          activeIndexRef.current = activeIndex;
 
           const card = cards[activeIndex];
           if (!card) return;
 
           const arrows = card.querySelectorAll<SVGPathElement>(".arrow");
+          const bars = card.querySelectorAll<SVGRectElement>(".bar");
 
-          // reset
-          gsap.killTweensOf(arrows);
           gsap.set(arrows, {
             strokeDasharray: 100,
             strokeDashoffset: 100,
-            opacity: 1,
           });
 
-          // animate AFTER snap finishes
           gsap.to(arrows, {
             strokeDashoffset: 0,
             duration: 1.5,
             ease: "power2.out",
             stagger: 0.15,
-            delay: 0.25,
+            delay: 0.2,
           });
+
+          gsap.fromTo(
+            bars,
+            { scaleY: 0.85 },
+            {
+              scaleY: 1.1,
+              duration: 0.6,
+              ease: "power2.out",
+              stagger: 0.08,
+              yoyo: true,
+              repeat: 1,
+            }
+          );
         },
 
-        onUpdate: (self: ScrollTrigger) => {
-          const activeIndex = Math.round(self.progress * (cards.length - 1));
+        onUpdate: (self) => {
+          const activeIndex = Math.round(self.progress * totalCards);
+          activeIndexRef.current = activeIndex;
 
           cards.forEach((card, index) => {
             const d = Math.abs(index - activeIndex);
@@ -120,18 +145,38 @@ export default function TimelinePage() {
               filter: d === 0 ? "blur(0px)" : `blur(${d * 2}px)`,
               boxShadow:
                 d === 0
-                  ? "0 30px 80px rgba(0,0,0,0.25)"
+                  ? "0 35px 90px rgba(0,0,0,0.28)"
                   : "0 10px 30px rgba(0,0,0,0.12)",
               duration: 0.35,
               ease: "power2.out",
             });
+
+            const glow = card.querySelector(".card-glow");
+            if (glow) {
+              gsap.to(glow, {
+                opacity: d === 0 ? 1 : 0,
+                duration: 0.4,
+              });
+            }
           });
         },
       },
     });
 
+    triggerRef.current = tween.scrollTrigger!;
+
     return () => ScrollTrigger.getAll().forEach((t) => t.kill());
   }, []);
+
+  const goToIndex = (index: number) => {
+    if (!triggerRef.current) return;
+    const total = TIMELINE.length - 1;
+    const progress = index / total;
+    triggerRef.current.scroll(
+      triggerRef.current.start +
+        (triggerRef.current.end - triggerRef.current.start) * progress
+    );
+  };
 
   return (
     <section
@@ -139,20 +184,37 @@ export default function TimelinePage() {
       className="relative min-h-screen bg-background overflow-hidden"
     >
       {/* HEADER */}
-      <div className="px-6 lg:px-20 pt-24 pb-16 max-w-3xl">
+      <div className="px-6 lg:px-20 pt-24 pb-10 max-w-3xl">
         <span className="text-primary font-semibold uppercase tracking-wide">
           Our Journey
         </span>
         <h1 className="mt-3 text-4xl md:text-5xl font-bold">
           Timeline of Excellence
         </h1>
-        <h1 className="text-primary mt-3 text-xl font-bold">
-          Scroll to view full journey
-        </h1>
         <p className="mt-4 text-muted-foreground text-lg">
           A year-by-year look at how Suprabha Electricals evolved into a trusted
           government contractor.
         </p>
+      </div>
+
+      {/* YEAR PILLS */}
+      <div className="px-6 lg:px-20 pb-6 sticky top-20 z-20">
+        <div className="flex gap-2 flex-wrap">
+          {TIMELINE.map((item, i) => (
+            <button
+              key={item.year}
+              onClick={() => goToIndex(i)}
+              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all
+                ${
+                  activeIndexRef.current === i
+                    ? "bg-primary text-primary-foreground shadow"
+                    : "bg-muted text-muted-foreground hover:bg-muted/70"
+                }`}
+            >
+              {item.year}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* TIMELINE */}
@@ -161,20 +223,21 @@ export default function TimelinePage() {
           {TIMELINE.map((item) => (
             <div
               key={item.year}
-              className="
-                timeline-card
-                relative overflow-hidden
-                bg-card border border-border rounded-3xl
-                p-6 sm:p-8 lg:p-12
-                flex flex-col justify-between
-                shrink-0
-                min-h-[420px] lg:min-h-[520px]
-                lg:min-w-[60vw]
-                will-change-transform
-              "
+              className="timeline-card relative overflow-hidden
+              bg-card border border-border rounded-3xl
+              p-6 sm:p-8 lg:p-12
+              flex flex-col justify-between
+              shrink-0
+              min-h-[420px] lg:min-h-[520px]
+              will-change-transform"
               style={{ width: "clamp(280px, 80vw, 640px)" }}
             >
-              {/* 📈 ICON */}
+              <div className="card-glow absolute inset-0 rounded-3xl pointer-events-none" />
+
+              <span className="absolute top-6 right-6 text-[120px] font-black text-primary/5 pointer-events-none">
+                {item.year}
+              </span>
+
               <svg
                 className="absolute bottom-6 right-6 w-12 h-14 opacity-75"
                 viewBox="0 0 48 48"
@@ -204,7 +267,6 @@ export default function TimelinePage() {
                   rx="1"
                   className="bar"
                 />
-
                 <path d="M10 22 L22 12 L30 16 L38 8" className="arrow" />
                 <path d="M38 8 L38 14 M38 8 L32 8" className="arrow" />
               </svg>
@@ -225,12 +287,8 @@ export default function TimelinePage() {
         </div>
       </div>
 
-      {/* ICON BASE STYLES */}
       <style>{`
-        .bar {
-          fill: hsl(var(--primary));
-        }
-
+        .bar { fill: hsl(var(--primary)); }
         .arrow {
           stroke: hsl(var(--primary));
           stroke-width: 2;
@@ -240,6 +298,14 @@ export default function TimelinePage() {
           stroke-dasharray: 100;
           stroke-dashoffset: 100;
           transform: translateY(-10px);
+        }
+        .card-glow {
+          background: radial-gradient(
+            600px circle at top left,
+            hsla(var(--primary), 0.18),
+            transparent 45%
+          );
+          opacity: 0;
         }
       `}</style>
     </section>
