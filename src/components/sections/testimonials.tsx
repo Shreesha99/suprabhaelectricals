@@ -10,6 +10,8 @@ import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 const AUTOPLAY_DURATION = 5;
+const FOCUS_HEIGHT = "360px"; // try 22rem / 40vh etc
+const BLUR_HEIGHT = "320px";
 
 const testimonials = [
   {
@@ -77,7 +79,8 @@ export function Testimonials() {
         ACTIVE_SCALE = 1.05;
       });
 
-      /* ---------------- Slide (TRUE LOOP) ---------------- */
+      const CENTER_INDEX = 1;
+
       const slideNext = () => {
         const cards = getCards();
 
@@ -94,16 +97,25 @@ export function Testimonials() {
           ease: "power3.inOut",
         });
 
-        tl.to(
+        tl.set(
           cards,
           {
-            scale: (i) => (i === 2 ? ACTIVE_SCALE : 0.9),
-            opacity: (i) => (i === 2 ? 1 : 0.45),
+            opacity: 0.45,
+            height: BLUR_HEIGHT,
+          },
+          "<"
+        );
+
+        // focus animation overlaps slide (KEY FIX)
+        tl.to(
+          cards[CENTER_INDEX + 1], // +1 because slide is mid-transition
+          {
+            opacity: 1,
+            height: FOCUS_HEIGHT,
             duration: 0.6,
             ease: "power3.out",
-            overwrite: "auto",
           },
-          "<0.3"
+          "<0.4" // 👈 start BEFORE slide ends
         );
       };
 
@@ -115,10 +127,12 @@ export function Testimonials() {
         onEnter: () => {
           gsap.set(track, { x: 0 });
 
+          const CENTER_INDEX = 1;
+
           getCards().forEach((card, i) => {
             gsap.set(card, {
-              scale: i === 1 ? ACTIVE_SCALE : 0.9,
-              opacity: i === 1 ? 1 : 0.45,
+              height: i === CENTER_INDEX ? FOCUS_HEIGHT : BLUR_HEIGHT,
+              opacity: i === CENTER_INDEX ? 1 : 0.45,
             });
           });
 
@@ -155,48 +169,58 @@ export function Testimonials() {
               maxWidth: "100%",
             }}
           >
-            <div ref={trackRef} className="flex will-change-transform">
-              <Card className="focus-card min-w-[420px] bg-card border-border shadow-lg">
-                <CardContent className="p-8 space-y-6">
-                  <p className="text-lg italic text-muted-foreground">
-                    “{testimonials.at(-1)!.quote}”
-                  </p>
-                  <div className="flex items-center gap-4 pt-4 border-t border-border">
-                    <Avatar>
-                      <AvatarImage src={testimonials.at(-1)!.image} />
-                      <AvatarFallback>
-                        {testimonials.at(-1)!.name[0]}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p className="font-semibold">
-                        {testimonials.at(-1)!.name}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {testimonials.at(-1)!.title}
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+            <div
+              ref={trackRef}
+              className="flex items-center will-change-transform"
+              style={{ height: FOCUS_HEIGHT }}
+            >
+              {/* CLONED LAST CARD */}
+              {(() => {
+                const t = testimonials.at(-1)!;
 
+                return (
+                  <Card className="focus-card min-w-[420px] h-[320px] opacity-45 bg-card border-border shadow-lg">
+                    <CardContent className="p-8 flex flex-col h-full">
+                      <p className="text-[15px] leading-relaxed italic text-muted-foreground/80 flex-1">
+                        “{t.quote}”
+                      </p>
+
+                      <div className="mt-6 pt-4 border-t border-border/40 flex items-center gap-4">
+                        <Avatar className="h-9 w-9">
+                          <AvatarImage src={t.image} />
+                          <AvatarFallback>{t.name[0]}</AvatarFallback>
+                        </Avatar>
+                        <div className="leading-tight">
+                          <p className="font-semibold text-sm">{t.name}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {t.title}
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })()}
+
+              {/* MAIN CARDS */}
               {testimonials.map((t, i) => (
                 <Card
                   key={i}
-                  className="focus-card min-w-[420px] bg-card border-border shadow-lg"
+                  className="focus-card min-w-[420px] h-[320px] opacity-45 bg-card border-border shadow-lg"
                 >
-                  <CardContent className="p-8 space-y-6">
-                    <p className="text-lg italic text-muted-foreground">
+                  <CardContent className="p-8 flex flex-col h-full">
+                    <p className="text-[15px] leading-relaxed italic text-muted-foreground/80 flex-1">
                       “{t.quote}”
                     </p>
-                    <div className="flex items-center gap-4 pt-4 border-t border-border">
-                      <Avatar>
+
+                    <div className="mt-6 pt-4 border-t border-border/40 flex items-center gap-4">
+                      <Avatar className="h-9 w-9">
                         <AvatarImage src={t.image} />
                         <AvatarFallback>{t.name[0]}</AvatarFallback>
                       </Avatar>
-                      <div>
-                        <p className="font-semibold">{t.name}</p>
-                        <p className="text-sm text-muted-foreground">
+                      <div className="leading-tight">
+                        <p className="font-semibold text-sm">{t.name}</p>
+                        <p className="text-xs text-muted-foreground">
                           {t.title}
                         </p>
                       </div>
