@@ -43,8 +43,9 @@ const TIMELINE = [
 export default function TimelinePage() {
   const sectionRef = useRef<HTMLDivElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
-  const triggerRef = useRef<ScrollTrigger | null>(null);
-  const activeIndexRef = useRef(0);
+
+  // ✨ background SVG ref (kept)
+  const bgSvgRef = useRef<SVGSVGElement | null>(null);
 
   useGSAP(() => {
     if (!sectionRef.current || !trackRef.current) return;
@@ -70,7 +71,21 @@ export default function TimelinePage() {
       });
     });
 
-    const tween = gsap.to(trackRef.current, {
+    // subtle background SVG parallax (kept)
+    if (bgSvgRef.current) {
+      gsap.to(bgSvgRef.current, {
+        y: -120,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1,
+        },
+      });
+    }
+
+    gsap.to(trackRef.current, {
       x: () => -maxTranslate,
       ease: "none",
       scrollTrigger: {
@@ -97,7 +112,6 @@ export default function TimelinePage() {
         onSnapComplete: (self) => {
           const activeIndex = Math.round(self.progress * totalCards);
           lastSnapIndex = activeIndex;
-          activeIndexRef.current = activeIndex;
 
           const card = cards[activeIndex];
           if (!card) return;
@@ -105,36 +119,32 @@ export default function TimelinePage() {
           const arrows = card.querySelectorAll<SVGPathElement>(".arrow");
           const bars = card.querySelectorAll<SVGRectElement>(".bar");
 
-          gsap.set(arrows, {
-            strokeDasharray: 100,
-            strokeDashoffset: 100,
-          });
-
+          // arrow draw
+          gsap.set(arrows, { strokeDashoffset: 100 });
           gsap.to(arrows, {
             strokeDashoffset: 0,
             duration: 1.5,
             ease: "power2.out",
             stagger: 0.15,
-            delay: 0.2,
           });
 
+          // bar emphasis
           gsap.fromTo(
             bars,
-            { scaleY: 0.85 },
+            { scaleY: 0.9 },
             {
               scaleY: 1.1,
               duration: 0.6,
-              ease: "power2.out",
-              stagger: 0.08,
               yoyo: true,
               repeat: 1,
+              stagger: 0.08,
+              ease: "power2.out",
             }
           );
         },
 
         onUpdate: (self) => {
           const activeIndex = Math.round(self.progress * totalCards);
-          activeIndexRef.current = activeIndex;
 
           cards.forEach((card, index) => {
             const d = Math.abs(index - activeIndex);
@@ -163,28 +173,35 @@ export default function TimelinePage() {
       },
     });
 
-    triggerRef.current = tween.scrollTrigger!;
-
     return () => ScrollTrigger.getAll().forEach((t) => t.kill());
   }, []);
-
-  const goToIndex = (index: number) => {
-    if (!triggerRef.current) return;
-    const total = TIMELINE.length - 1;
-    const progress = index / total;
-    triggerRef.current.scroll(
-      triggerRef.current.start +
-        (triggerRef.current.end - triggerRef.current.start) * progress
-    );
-  };
 
   return (
     <section
       ref={sectionRef}
       className="relative min-h-screen bg-background overflow-hidden"
     >
+      <svg
+        ref={bgSvgRef}
+        className="absolute top-0 left-0 w-full h-[140%] pointer-events-none opacity-25"
+        viewBox="0 0 1200 800"
+        preserveAspectRatio="xMidYMid slice"
+        fill="none"
+      >
+        <path
+          d="M-100 300 C 300 200, 600 400, 1300 250"
+          stroke="hsl(var(--primary))"
+          strokeWidth="1"
+        />
+        <path
+          d="M-100 520 C 400 620, 720 320, 1300 480"
+          stroke="hsl(var(--primary))"
+          strokeWidth="1"
+        />
+      </svg>
+
       {/* HEADER */}
-      <div className="px-6 lg:px-20 pt-24 pb-10 max-w-3xl">
+      <div className="px-6 lg:px-20 pt-24 pb-10 max-w-3xl relative z-10">
         <span className="text-primary font-semibold uppercase tracking-wide">
           Our Journey
         </span>
@@ -197,28 +214,8 @@ export default function TimelinePage() {
         </p>
       </div>
 
-      {/* YEAR PILLS */}
-      <div className="px-6 lg:px-20 pb-6 sticky top-20 z-20">
-        <div className="flex gap-2 flex-wrap">
-          {TIMELINE.map((item, i) => (
-            <button
-              key={item.year}
-              onClick={() => goToIndex(i)}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all
-                ${
-                  activeIndexRef.current === i
-                    ? "bg-primary text-primary-foreground shadow"
-                    : "bg-muted text-muted-foreground hover:bg-muted/70"
-                }`}
-            >
-              {item.year}
-            </button>
-          ))}
-        </div>
-      </div>
-
       {/* TIMELINE */}
-      <div className="relative">
+      <div className="relative z-10">
         <div ref={trackRef} className="flex flex-row gap-6 px-6 lg:px-20 pb-24">
           {TIMELINE.map((item) => (
             <div
