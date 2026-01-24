@@ -25,6 +25,8 @@ export function Projects() {
   const [pageIndex, setPageIndex] = useState(0);
   const pageProgressRef = useRef<SVGCircleElement | null>(null);
   const pageTimelineRef = useRef<gsap.core.Tween | null>(null);
+  const gridRef = useRef<HTMLDivElement | null>(null);
+
   const getIndicatorWidth = (count: number) => {
     if (count <= 5) return 28;
     if (count <= 10) return 20;
@@ -168,6 +170,21 @@ export function Projects() {
     };
   }, [pageIndex, totalPages, activeProject]);
 
+  useEffect(() => {
+    if (!gridRef.current) return;
+
+    gsap.fromTo(
+      gridRef.current,
+      { opacity: 0, y: 16 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        ease: "power3.out",
+      }
+    );
+  }, [pageIndex]);
+
   /* ---------- AUTOPLAY + PROGRESS ---------- */
   useEffect(() => {
     if (!activeProject || !progressRef.current) return;
@@ -278,7 +295,7 @@ export function Projects() {
             </div>
           )}
 
-          <div className="grid gap-8 md:grid-cols-2">
+          <div ref={gridRef} className="grid gap-8 md:grid-cols-2">
             {pagedProjects.map((project) => (
               <button
                 type="button"
