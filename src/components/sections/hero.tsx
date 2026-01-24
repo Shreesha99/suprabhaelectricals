@@ -93,7 +93,7 @@ export function Hero() {
         <div className="space-y-10 sm:space-y-14 text-center">
           {/* Badge */}
           <div className="hero-animate inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-2 text-[11px] sm:text-sm font-semibold text-primary">
-            Government Licensed Electrical Contractor
+            Government Super Grade Licensed Electrical Contractor · Karnataka
           </div>
 
           {/* Heading */}
@@ -105,9 +105,9 @@ export function Hero() {
 
           {/* Description */}
           <p className="hero-animate max-w-3xl mx-auto text-sm sm:text-lg text-white/75 leading-relaxed">
-            Specialized in compliant HT & LT electrical systems for government
-            departments, PSUs, hospitals, and critical infrastructure across
-            Karnataka.
+            A Government Super Grade licensed contractor delivering
+            statutory-compliant HT & LT electrical works for departments, PSUs,
+            hospitals, and critical public infrastructure across Karnataka.
           </p>
 
           {/* Counters (DO NOT TOUCH CORE FUNCTIONALITY) */}
